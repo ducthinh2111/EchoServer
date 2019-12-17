@@ -13,27 +13,23 @@ public class Artboard {
         this.clients = new ArrayList<>();
     }
 
-    public String getCode() {
+    public synchronized String getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public synchronized void setCode(String code) {
         this.code = code;
     }
 
-    public String getDrawingObjects() {
+    public synchronized String getDrawingObjects() {
         return drawingObjects;
     }
 
-    public void setDrawingObjects(String drawingObjects) {
+    public synchronized void setDrawingObjects(String drawingObjects) {
         this.drawingObjects = drawingObjects;
     }
 
-    public List<Client> getClients() {
+    public synchronized List<Client> getClients() {
         return clients;
-    }
-
-    public void setClients(List<Client> clients) {
-        this.clients = clients;
     }
 }

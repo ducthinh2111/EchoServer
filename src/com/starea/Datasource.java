@@ -7,32 +7,26 @@ import java.util.List;
 import java.util.Stack;
 
 public class Datasource {
-    private volatile LinkedList<Artboard> artboards;
-    private volatile LinkedList<Client> connectedClients;
-    private static Datasource instance = new Datasource();
+    private static volatile LinkedList<Artboard> artboards = new LinkedList<>();
+    private static volatile LinkedList<Client> connectedClients = new LinkedList<>();
+    private static volatile Datasource instance;
 
     public static Datasource getInstance() {
+        if(instance == null) {
+            synchronized (Datasource.class) {
+                if(instance == null) {
+                    instance = new Datasource();
+                }
+            }
+        }
         return instance;
     }
 
-    public Datasource() {
-        this.artboards = new LinkedList<>();
-        this.connectedClients = new LinkedList<>();
-    }
-
-    public LinkedList<Artboard> getArtboards() {
+    public synchronized LinkedList<Artboard> getArtboards() {
         return artboards;
     }
 
-    public void setArtboards(LinkedList<Artboard> artboards) {
-        this.artboards = artboards;
-    }
-
-    public LinkedList<Client> getConnectedClients() {
+    public synchronized LinkedList<Client> getConnectedClients() {
         return connectedClients;
-    }
-
-    public void setConnectedClients(LinkedList<Client> connectedClients) {
-        this.connectedClients = connectedClients;
     }
 }

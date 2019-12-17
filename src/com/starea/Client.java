@@ -4,19 +4,19 @@ public class Client {
     private volatile String clientName;
     private volatile UserThread ClientThread;
 
-    public String getClientName() {
+    public synchronized String getClientName() {
         return clientName;
     }
 
-    public void setClientName(String clientName) {
+    public synchronized void setClientName(String clientName) {
         this.clientName = clientName;
     }
 
-    public UserThread getClientThread() {
+    public synchronized UserThread getClientThread() {
         return ClientThread;
     }
 
-    public void setClientThread(UserThread clientThread) {
+    public synchronized void setClientThread(UserThread clientThread) {
         ClientThread = clientThread;
     }
 }
