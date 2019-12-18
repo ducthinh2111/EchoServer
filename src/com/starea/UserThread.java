@@ -72,7 +72,7 @@ public class UserThread extends Thread {
                     updateAction(artboard, data);
                 }
 
-                if(message[0].equals("SENDMESSAGE")) {
+                if(message[0].equals("SEND_MESSAGE")) {
                     Artboard artboard = null;
                     Client client = null;
                     String code = message[1];
@@ -133,7 +133,7 @@ public class UserThread extends Thread {
         Datasource.getInstance().getArtboards().push(newArtBoard);
 
         output.println("CODE" + ":" + code);
-        output.println("NOTIFICATION" + ":" + "Open connection Successfully");
+        output.println("NOTIFICATION" + ":" + "Open connection successfully");
     }
 
     private void joinAction(String[] message) throws IOException {
@@ -154,7 +154,7 @@ public class UserThread extends Thread {
                 for (Client client : artboard.getClients()) {
                     if (client.getClientName().equals(newClient.getClientName())) {
                         output.println("NOTIFICATION" + ":" + "Name is already used by another client");
-                        output.println("RESULT" + ":" + "Failed");
+                        output.println("CONNECTION_STATE" + ":" + "Closed");
                         socket.close();
                         return;
                     }
@@ -167,7 +167,7 @@ public class UserThread extends Thread {
 
         if (!flag) {
             output.println("NOTIFICATION" + ":" + "Cannot find artboard");
-            output.println("RESULT" + ":" + "Failed");
+            output.println("CONNECTION_STATE" + ":" + "Closed");
             socket.close();
         } else {
             output.println("NOTIFICATION" + ":" + "Join Successfully");
@@ -185,14 +185,14 @@ public class UserThread extends Thread {
         if (client.getClientName().equals("host")) {
             for (Client c : artboard.getClients()) {
                 c.getClientThread().output.println("NOTIFICATION" + ":" + "Disconnecting");
-                c.getClientThread().output.println("RESULT" + ":" + "Failed");
+                c.getClientThread().output.println("CONNECTION_STATE" + ":" + "Closed");
                 c.getClientThread().socket.close();
             }
             artboard.getClients().clear();
             Datasource.getInstance().getArtboards().remove(artboard);
         } else {
             client.getClientThread().output.println("NOTIFICATION" + ":" + "Disconnecting");
-            client.getClientThread().output.println("RESULT" + ":" + "Failed");
+            client.getClientThread().output.println("CONNECTION_STATE" + ":" + "Closed");
             client.getClientThread().socket.close();
             artboard.getClients().remove(client);
             for (Client c : artboard.getClients()) {
@@ -202,8 +202,9 @@ public class UserThread extends Thread {
     }
 
     public void updateAction(Artboard artboard, String data) {
+        artboard.setDrawingObjects(data);
         for(Client client : artboard.getClients()) {
-            client.getClientThread().output.println("NEEDUPDATE" + ":" + data);
+            client.getClientThread().output.println("NEW_UPDATE" + ":" + data);
             client.getClientThread().output.println("NOTIFICATION" + ":" + "New update released");
         }
     }
